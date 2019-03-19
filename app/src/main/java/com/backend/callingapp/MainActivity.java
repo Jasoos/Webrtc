@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                mSmackConnection = new SmackConnection(mPreBindData,mMapperResponse);
-                mSmackConnection.connect(mRoomName);
+                mSmackConnection = new SmackConnection(mPreBindData,mMapperResponse,mRoomName);
+                mSmackConnection.connect();
             }
         });
         thread.start();
