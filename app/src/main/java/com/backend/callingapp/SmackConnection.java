@@ -31,12 +31,18 @@ import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
 import org.jivesoftware.smack.roster.rosterstore.RosterStore;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatException;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.xdata.Form;
 import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
@@ -53,9 +59,7 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
     private ConvoServicesInterface.MapperResponse mMapperResponse = null;
     private String mRoomName;
 
-    public static enum ConnectionState {
-        CONNECTED, CONNECTING, RECONNECTING, DISCONNECTED;
-    }
+    private MucRoom mMucRoom;
 
     private BOSHClient mClient;
 
@@ -72,7 +76,6 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
             config = BOSHConfiguration.builder()
                     .useHttps()
                     .setHost("meet.jit.si")
-                    //.setPort(80)
                     .setPort(443)
                     .allowEmptyOrNullUsernames()
                     .setFile("/http-bind?room=" + mRoomName)
@@ -101,6 +104,8 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
         mClient.addBOSHClientResponseListener(this);
         mClient.addBOSHClientConnListener(this);
         mClient.addBOSHClientRequestListener(this);
+
+        mMucRoom = new MucRoom(mConnection, mRoomName);
     }
 
     public void connect() {
@@ -116,6 +121,8 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
             roster.addPresenceEventListener(this);
             roster.addRosterLoadedListener(this);
             Roster.setRosterLoadedAtLoginDefault(true);
+
+            // sending the configuration form unlocks the room
 
         } catch (XmppStringprepException e) {
             e.printStackTrace();
@@ -168,6 +175,21 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
     @Override
     public void authenticated(XMPPConnection connection, boolean resumed) {
         Log.d(TAG, "authenticated: ");
+        try {
+            mMucRoom.createRoom();
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (MultiUserChatException.NotAMucServiceException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
