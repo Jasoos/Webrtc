@@ -30,6 +30,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
 import org.jivesoftware.smack.roster.rosterstore.RosterStore;
+import org.jivesoftware.smackx.caps.EntityCapsManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatException;
@@ -60,6 +61,7 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
     private String mRoomName;
 
     private MucRoom mMucRoom;
+    private PubSubHelper mPubSubHelper;
 
     private BOSHClient mClient;
 
@@ -106,11 +108,19 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
         mClient.addBOSHClientRequestListener(this);
 
         mMucRoom = new MucRoom(mConnection, mRoomName);
+
     }
 
     public void connect() {
         try {
             mConnection.connect().login();
+
+            // Get an instance of entity caps manager for the specified connection
+            EntityCapsManager mgr = EntityCapsManager.getInstanceFor(mConnection);
+            // Enable entity capabilities
+            mgr.enableEntityCaps();
+
+            // sending the configuration form unlocks the room
 
             PingManager.setDefaultPingInterval(600); //Ping every 10 minutes
             PingManager pingManager = PingManager.getInstanceFor(mConnection);
@@ -121,8 +131,6 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
             roster.addPresenceEventListener(this);
             roster.addRosterLoadedListener(this);
             Roster.setRosterLoadedAtLoginDefault(true);
-
-            // sending the configuration form unlocks the room
 
         } catch (XmppStringprepException e) {
             e.printStackTrace();
@@ -175,21 +183,8 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
     @Override
     public void authenticated(XMPPConnection connection, boolean resumed) {
         Log.d(TAG, "authenticated: ");
-        try {
-            mMucRoom.createRoom();
-        } catch (XmppStringprepException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (SmackException.NoResponseException e) {
-            e.printStackTrace();
-        } catch (SmackException.NotConnectedException e) {
-            e.printStackTrace();
-        } catch (XMPPException.XMPPErrorException e) {
-            e.printStackTrace();
-        } catch (MultiUserChatException.NotAMucServiceException e) {
-            e.printStackTrace();
-        }
+
+        mPubSubHelper = new PubSubHelper(mConnection, mRoomName, mPreBindResult, mMapperResponse);
     }
 
     @Override
