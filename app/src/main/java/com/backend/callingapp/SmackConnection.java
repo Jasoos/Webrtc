@@ -56,8 +56,6 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     private static final String TAG = SmackConnection.class.getSimpleName();
     private XMPPBOSHConnection mConnection = null;
-    ConvoServicesInterface.PreBindResult mPreBindResult = null;
-    private ConvoServicesInterface.MapperResponse mMapperResponse = null;
     private String mRoomName;
 
     private MucRoom mMucRoom;
@@ -65,9 +63,7 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     private BOSHClient mClient;
 
-    public SmackConnection(ConvoServicesInterface.PreBindResult mPreBindResult, ConvoServicesInterface.MapperResponse mMapperResponse,String roomName) {
-        this.mPreBindResult = mPreBindResult;
-        this.mMapperResponse = mMapperResponse;
+    public SmackConnection(String roomName) {
 
         mRoomName = roomName;
 
@@ -86,7 +82,6 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .setSendPresence(true)
                     .enableDefaultDebugger()
-                    .setResource(mPreBindResult.jid.split("/")[1])
                     .performSaslAnonymousAuthentication()
                     .build();
         } catch (XmppStringprepException e) {
@@ -98,7 +93,6 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
         BOSHClientConfig mBoshClientConfig = BOSHClientConfig.Builder
                 .create(URI.create("https://meet.jit.si/http-bind?room=" + mRoomName), "meet.jit.si")
-                .setFrom(mPreBindResult.jid)
                 .build();
 
         mClient = BOSHClient.create(mBoshClientConfig);
@@ -107,8 +101,7 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
         mClient.addBOSHClientConnListener(this);
         mClient.addBOSHClientRequestListener(this);
 
-        mMucRoom = new MucRoom(mConnection, mRoomName);
-
+        mMucRoom = new MucRoom(mConnection);
     }
 
     public void connect() {
@@ -147,32 +140,32 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     @Override
     public void entriesAdded(Collection<Jid> addresses) {
-        Log.d(TAG, "entriesAdded: ");
+       //Log.d(TAG, "entriesAdded: ");
     }
 
     @Override
     public void entriesUpdated(Collection<Jid> addresses) {
-        Log.d(TAG, "entriesUpdated: ");
+       //Log.d(TAG, "entriesUpdated: ");
     }
 
     @Override
     public void entriesDeleted(Collection<Jid> addresses) {
-        Log.d(TAG, "entriesDeleted: ");
+       //Log.d(TAG, "entriesDeleted: ");
     }
 
     @Override
     public void presenceChanged(Presence presence) {
-        Log.d(TAG, "presenceChanged: ");
+       //Log.d(TAG, "presenceChanged: ");
     }
 
     @Override
     public void connectionEvent(BOSHClientConnEvent connEvent) {
-        Log.d(TAG, "connectionEvent: ");
+       //Log.d(TAG, "connectionEvent: ");
     }
 
     @Override
     public void connected(XMPPConnection connection) {
-        Log.d(TAG, "connected: ");
+       //Log.d(TAG, "connected: ");
         /*try {
             mClient.send(ComposableBody.builder().setAttribute(BodyQName.create("http://jabber.org/protocol/httpbind", "sid"), mPreBindResult.sid).build());
         } catch (BOSHException e) {
@@ -182,96 +175,83 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     @Override
     public void authenticated(XMPPConnection connection, boolean resumed) {
-        Log.d(TAG, "authenticated: ");
+       //Log.d(TAG, "authenticated: ");
 
-        mPubSubHelper = new PubSubHelper(mConnection, mRoomName, mPreBindResult, mMapperResponse);
+        //mPubSubHelper = new PubSubHelper(mConnection, mRoomName, mPreBindResult, mMapperResponse);
+
+        mMucRoom.createRoom(mRoomName);
+
     }
 
     @Override
     public void connectionClosed() {
-        Log.d(TAG, "connectionClosed: ");
+       //Log.d(TAG, "connectionClosed: ");
     }
 
     @Override
     public void connectionClosedOnError(Exception e) {
-        Log.d(TAG, "connectionClosedOnError: ");
+       //Log.d(TAG, "connectionClosedOnError: ");
     }
 
     @Override
     public void processStanza(Stanza packet) throws SmackException.NotConnectedException, InterruptedException, SmackException.NotLoggedInException {
-        Log.d(TAG, "processStanza: " + packet.toXML("").toString());
+       //Log.d(TAG, "processStanza: " + packet.toXML("").toString());
     }
 
     @Override
     public boolean accept(Stanza stanza) {
-        Log.d(TAG, "accept: ");
+       //Log.d(TAG, "accept: ");
         return true;
     }
 
     @Override
     public void responseReceived(BOSHMessageEvent event) {
-        Log.d(TAG, "responseReceived: ");
+       //Log.d(TAG, "responseReceived: ");
     }
 
     @Override
     public void requestSent(BOSHMessageEvent event) {
-        Log.d(TAG, "requestSent: ");
+       //Log.d(TAG, "requestSent: ");
     }
 
     @Override
     public void pingFailed() {
-        Log.d(TAG, "pingFailed: ");
+       //Log.d(TAG, "pingFailed: ");
     }
 
     @Override
     public void presenceAvailable(FullJid address, Presence availablePresence) {
-        Log.d(TAG, "presenceAvailable: ");
+       //Log.d(TAG, "presenceAvailable: ");
     }
 
     @Override
     public void presenceUnavailable(FullJid address, Presence presence) {
-        Log.d(TAG, "presenceUnavailable: ");
+       //Log.d(TAG, "presenceUnavailable: ");
     }
 
     @Override
     public void presenceError(Jid address, Presence errorPresence) {
-        Log.d(TAG, "presenceError: ");
+       //Log.d(TAG, "presenceError: ");
     }
 
     @Override
     public void presenceSubscribed(BareJid address, Presence subscribedPresence) {
-        Log.d(TAG, "presenceSubscribed: ");
+       //Log.d(TAG, "presenceSubscribed: ");
     }
 
     @Override
     public void presenceUnsubscribed(BareJid address, Presence unsubscribedPresence) {
-        Log.d(TAG, "presenceUnsubscribed: ");
+       //Log.d(TAG, "presenceUnsubscribed: ");
     }
 
     @Override
     public void onRosterLoaded(Roster roster) {
-        Log.d(TAG, "onRosterLoaded: ");
+       //Log.d(TAG, "onRosterLoaded: ");
     }
 
     @Override
     public void onRosterLoadingFailed(Exception exception) {
-        Log.d(TAG, "onRosterLoadingFailed: ");
+       //Log.d(TAG, "onRosterLoadingFailed: ");
     }
 
-    public void createPacket() throws XmppStringprepException {
-        ComposableBody composableBody = ComposableBody.builder()
-                .setAttribute(BodyQName.create("http://jabber.org/protocol/httpbind", "sid"), mPreBindResult.sid)
-                .setAttribute(BodyQName.create("http://jabber.org/protocol/httpbind", "rid"), mPreBindResult.rid)
-                .build();
-        TestIQ iq = new TestIQ("services", "urn:xmpp:extdisco:1");
-        iq.setTo(JidCreate.from("meet.jit.si"));
-        iq.setType(IQ.Type.get);
-
-        TestIQ iq2 = new TestIQ(new DiscoverInfo());
-        iq2.setFrom(JidCreate.from(mPreBindResult.jid));
-        iq2.setTo(JidCreate.from("meet.jit.si"));
-        iq2.setType(IQ.Type.get);
-
-        composableBody = composableBody.rebuild().setPayloadXML(iq.toXML("").toString() + iq2.toXML("").toString()).build();
-    }
 }
