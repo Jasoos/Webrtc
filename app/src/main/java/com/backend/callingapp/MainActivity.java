@@ -11,7 +11,7 @@ import org.jivesoftware.smack.provider.ProviderManager;
 public class MainActivity extends AppCompatActivity {
 
     public String TAG = MainActivity.class.getSimpleName();
-    String mRoomName = "PakistanZindabad";
+    String mRoomName = "Pakistan1";
 
     SmackConnection mSmackConnection = null;
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                mSmackConnection = new SmackConnection(mRoomName);
+                mSmackConnection = new SmackConnection(mRoomName, MainActivity.this);
                 mSmackConnection.connect();
             }
         });

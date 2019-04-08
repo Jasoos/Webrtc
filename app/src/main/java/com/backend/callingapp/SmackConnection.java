@@ -1,5 +1,6 @@
 package com.backend.callingapp;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.igniterealtime.jbosh.BOSHClient;
@@ -62,13 +63,15 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
     private PubSubHelper mPubSubHelper;
 
     private BOSHClient mClient;
+    private Context context;
 
-    public SmackConnection(String roomName) {
+    public SmackConnection(String roomName, Context context) {
 
         mRoomName = roomName;
+        this.context = context;
 
         SmackConfiguration.DEBUG = true;
-        System.setProperty("smack.debuggerClass","org.jivesoftware.smack.debugger.ConsoleDebugger");
+        System.setProperty("smack.debuggerClass", "org.jivesoftware.smack.debugger.ConsoleDebugger");
         System.setProperty("smack.debugEnabled", "true");
         SmackConfiguration.setDefaultReplyTimeout(120000);
 
@@ -104,7 +107,7 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
         mClient.addBOSHClientConnListener(this);
         mClient.addBOSHClientRequestListener(this);
 
-        mMucRoom = new MucRoom(mConnection);
+        mMucRoom = new MucRoom(mConnection, context);
     }
 
     public void connect() {
@@ -143,32 +146,32 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     @Override
     public void entriesAdded(Collection<Jid> addresses) {
-       Log.d(TAG, "entriesAdded: ");
+        Log.d(TAG, "entriesAdded: ");
     }
 
     @Override
     public void entriesUpdated(Collection<Jid> addresses) {
-       Log.d(TAG, "entriesUpdated: ");
+        Log.d(TAG, "entriesUpdated: ");
     }
 
     @Override
     public void entriesDeleted(Collection<Jid> addresses) {
-       Log.d(TAG, "entriesDeleted: ");
+        Log.d(TAG, "entriesDeleted: ");
     }
 
     @Override
     public void presenceChanged(Presence presence) {
-       Log.d(TAG, "presenceChanged: ");
+        Log.d(TAG, "presenceChanged: ");
     }
 
     @Override
     public void connectionEvent(BOSHClientConnEvent connEvent) {
-       Log.d(TAG, "connectionEvent: ");
+        Log.d(TAG, "connectionEvent: ");
     }
 
     @Override
     public void connected(XMPPConnection connection) {
-       Log.d(TAG, "connected: ");
+        Log.d(TAG, "connected: ");
         /*try {
             mClient.send(ComposableBody.builder().setAttribute(BodyQName.create("http://jabber.org/protocol/httpbind", "sid"), mPreBindResult.sid).build());
         } catch (BOSHException e) {
@@ -178,7 +181,7 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     @Override
     public void authenticated(XMPPConnection connection, boolean resumed) {
-       Log.d(TAG, "authenticated: ");
+        Log.d(TAG, "authenticated: ");
 
         //mPubSubHelper = new PubSubHelper(mConnection, mRoomName, mPreBindResult, mMapperResponse);
 
@@ -188,73 +191,73 @@ public class SmackConnection implements BOSHClientConnListener, RosterListener, 
 
     @Override
     public void connectionClosed() {
-       Log.d(TAG, "connectionClosed: ");
+        Log.d(TAG, "connectionClosed: ");
     }
 
     @Override
     public void connectionClosedOnError(Exception e) {
-       Log.d(TAG, "connectionClosedOnError: ");
+        Log.d(TAG, "connectionClosedOnError: ");
     }
 
     @Override
     public void processStanza(Stanza packet) {
-       Log.d(TAG, "processStanza: " + packet.toXML("").toString());
+        Log.d(TAG, "processStanza: " + packet.toXML("").toString());
     }
 
     @Override
     public boolean accept(Stanza stanza) {
-       Log.d(TAG, "accept: ");
+        Log.d(TAG, "accept: ");
         return true;
     }
 
     @Override
     public void responseReceived(BOSHMessageEvent event) {
-       Log.d(TAG, "responseReceived: ");
+        Log.d(TAG, "responseReceived: ");
     }
 
     @Override
     public void requestSent(BOSHMessageEvent event) {
-       Log.d(TAG, "requestSent: ");
+        Log.d(TAG, "requestSent: ");
     }
 
     @Override
     public void pingFailed() {
-       Log.d(TAG, "pingFailed: ");
+        Log.d(TAG, "pingFailed: ");
     }
 
     @Override
     public void presenceAvailable(FullJid address, Presence availablePresence) {
-       Log.d(TAG, "presenceAvailable: ");
+        Log.d(TAG, "presenceAvailable: ");
     }
 
     @Override
     public void presenceUnavailable(FullJid address, Presence presence) {
-       Log.d(TAG, "presenceUnavailable: ");
+        Log.d(TAG, "presenceUnavailable: ");
     }
 
     @Override
     public void presenceError(Jid address, Presence errorPresence) {
-       Log.d(TAG, "presenceError: ");
+        Log.d(TAG, "presenceError: ");
     }
 
     @Override
     public void presenceSubscribed(BareJid address, Presence subscribedPresence) {
-       Log.d(TAG, "presenceSubscribed: ");
+        Log.d(TAG, "presenceSubscribed: ");
     }
 
     @Override
     public void presenceUnsubscribed(BareJid address, Presence unsubscribedPresence) {
-       Log.d(TAG, "presenceUnsubscribed: ");
+        Log.d(TAG, "presenceUnsubscribed: ");
     }
 
     @Override
     public void onRosterLoaded(Roster roster) {
-       Log.d(TAG, "onRosterLoaded: ");
+        Log.d(TAG, "onRosterLoaded: ");
     }
 
     @Override
     public void onRosterLoadingFailed(Exception exception) {
-       Log.d(TAG, "onRosterLoadingFailed: ");
+        Log.d(TAG, "onRosterLoadingFailed: ");
     }
 
 }
