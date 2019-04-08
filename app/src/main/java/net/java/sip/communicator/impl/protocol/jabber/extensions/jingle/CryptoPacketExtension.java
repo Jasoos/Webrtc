@@ -320,4 +320,9 @@ public class CryptoPacketExtension
         }
         return false;
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

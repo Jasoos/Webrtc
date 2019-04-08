@@ -79,4 +79,9 @@ public class ParameterPacketExtension extends AbstractPacketExtension
     {
         return super.getAttributeAsString(VALUE_ATTR_NAME);
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

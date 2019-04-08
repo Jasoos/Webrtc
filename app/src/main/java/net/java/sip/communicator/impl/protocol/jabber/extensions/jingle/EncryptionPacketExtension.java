@@ -139,4 +139,9 @@ public class EncryptionPacketExtension
             this.addCrypto(((CryptoPacketExtension) childExtension));
         }
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

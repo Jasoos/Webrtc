@@ -10,6 +10,9 @@ import java.util.*;
 
 import net.java.sip.communicator.impl.protocol.jabber.extensions.*;
 
+import org.jivesoftware.smack.packet.ExtensionElement;
+import org.jivesoftware.smack.packet.PacketExtension;
+
 
 /**
  * Represents the <tt>payload-type</tt> elements described in XEP-0167.
@@ -200,7 +203,7 @@ public class PayloadTypePacketExtension extends AbstractPacketExtension
      *
      * @param parameter an SDP parameter for this encoding.
      */
-    public void addParameter(ParameterPacketExtension parameter)
+    public void addParameter(ExtensionElement parameter)
     {
         //parameters are the only extensions we can have so let's use
         //super's list.
@@ -218,5 +221,10 @@ public class PayloadTypePacketExtension extends AbstractPacketExtension
     public List<ParameterPacketExtension> getParameters()
     {
         return (List<ParameterPacketExtension>)super.getChildExtensions();
+    }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
     }
 }

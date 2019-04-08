@@ -59,4 +59,9 @@ public class RedirectPacketExtension
     {
         return redir;
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

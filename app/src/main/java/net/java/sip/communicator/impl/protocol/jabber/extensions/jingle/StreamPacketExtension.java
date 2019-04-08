@@ -23,4 +23,9 @@ public class StreamPacketExtension extends AbstractPacketExtension {
 	public SsrcPacketExtension getSsrc() {
 		return getChildExtensionsOfType(SsrcPacketExtension.class).get(0);
 	}
+
+	@Override
+	public CharSequence toXML(String enclosingNamespace) {
+		return null;
+	}
 }

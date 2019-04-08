@@ -6,7 +6,7 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber.extensions.jingle;
 
-import org.jivesoftware.smack.provider.*;
+import org.jivesoftware.smackx.bytestreams.ibb.provider.DataPacketProvider;
 import org.xmlpull.v1.*;
 
 /**
@@ -15,9 +15,7 @@ import org.xmlpull.v1.*;
  *
  * @author Sebastien Vincent
  */
-public class RedirectProvider
-    implements PacketExtensionProvider
-{
+public class RedirectProvider extends DataPacketProvider.PacketExtensionProvider {
     /**
      * Parses a reason extension sub-packet and creates a {@link
      * RedirectPacketExtension} instance. At the beginning of the method call,

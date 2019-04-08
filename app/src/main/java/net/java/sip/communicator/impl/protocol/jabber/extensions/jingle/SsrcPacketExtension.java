@@ -13,4 +13,9 @@ public class SsrcPacketExtension extends AbstractPacketExtension {
 	public SsrcPacketExtension() {
 		super(null, ELEMENT_NAME);
 	}
+
+	@Override
+	public CharSequence toXML(String enclosingNamespace) {
+		return null;
+	}
 }

@@ -22,4 +22,9 @@ public class RtcpMuxExtension extends AbstractPacketExtension {
 	{
 		super(null, ELEMENT_NAME);
 	}
+
+	@Override
+	public CharSequence toXML(String enclosingNamespace) {
+		return null;
+	}
 }

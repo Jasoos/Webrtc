@@ -34,4 +34,9 @@ public class TransferredPacketExtension
     {
         super(NAMESPACE, ELEMENT_NAME);
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

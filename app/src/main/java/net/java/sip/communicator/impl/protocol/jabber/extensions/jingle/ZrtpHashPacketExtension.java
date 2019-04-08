@@ -83,4 +83,9 @@ public class ZrtpHashPacketExtension extends AbstractPacketExtension
     {
         setText(value);
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

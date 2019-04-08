@@ -47,4 +47,9 @@ public class SessionInfoPacketExtension extends AbstractPacketExtension
     {
         return type;
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

@@ -43,6 +43,11 @@ public class ContentPacketExtension extends AbstractPacketExtension
      */
     public static final String SENDERS_ATTR_NAME = "senders";
 
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
+
     /**
      * The values we currently support for the creator field.
      */

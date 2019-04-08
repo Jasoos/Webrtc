@@ -126,13 +126,13 @@ public class IceUdpTransportPacketExtension extends AbstractPacketExtension
      * @return this element's child (local or remote) candidate elements.
      */
     @Override
-    public List<? extends PacketExtension> getChildExtensions()
+    public List<? extends ExtensionElement> getChildExtensions()
     {
         synchronized (candidateList)
         {
             if(candidateList.size() > 0)
             {
-                return candidateList;
+                return (List<? extends PacketExtension>) candidateList;
             }
             else if (remoteCandidate != null)
             {
@@ -140,7 +140,7 @@ public class IceUdpTransportPacketExtension extends AbstractPacketExtension
                     = new ArrayList<RemoteCandidatePacketExtension>();
                 list.add(remoteCandidate);
 
-                return list;
+                return (List<? extends PacketExtension>) list;
             }
         }
 
@@ -224,7 +224,7 @@ public class IceUdpTransportPacketExtension extends AbstractPacketExtension
      *  @param childExtension the extension we'd like to add here.
      */
     @Override
-    public void addChildExtension(PacketExtension childExtension)
+    public void addChildExtension(ExtensionElement childExtension)
     {
         //first check for RemoteCandidate because they extend Candidate.
         if(childExtension instanceof RemoteCandidatePacketExtension)
@@ -232,5 +232,10 @@ public class IceUdpTransportPacketExtension extends AbstractPacketExtension
 
         else if(childExtension instanceof CandidatePacketExtension)
             addCandidate((CandidatePacketExtension) childExtension);
+    }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
     }
 }

@@ -410,4 +410,9 @@ public class CandidatePacketExtension extends AbstractPacketExtension
         // If the types are equal.
         return 0;
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

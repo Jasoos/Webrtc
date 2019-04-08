@@ -38,4 +38,9 @@ public class StreamsPacketExtension extends AbstractPacketExtension {
 	public List<StreamPacketExtension> getStreamList() {
 		return streamList;
 	}
+
+	@Override
+	public CharSequence toXML(String enclosingNamespace) {
+		return null;
+	}
 }

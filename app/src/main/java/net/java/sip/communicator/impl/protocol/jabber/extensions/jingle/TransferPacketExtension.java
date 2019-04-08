@@ -109,4 +109,9 @@ public class TransferPacketExtension
     {
         setAttribute(TO_ATTR_NAME, to);
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

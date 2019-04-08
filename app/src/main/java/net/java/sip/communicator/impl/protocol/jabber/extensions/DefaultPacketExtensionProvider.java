@@ -88,9 +88,8 @@ public class DefaultPacketExtensionProvider<C extends AbstractPacketExtension> e
 
             if (eventType == XmlPullParser.START_TAG)
             {
-                DataPacketProvider.PacketExtensionProvider provider
-                    = (DataPacketProvider.PacketExtensionProvider) ProviderManager.getIQProvider(elementName,namespace)
-                        .getExtensionProvider( elementName, namespace );
+                ExtensionElementProvider<ExtensionElement> provider = ProviderManager
+                        .getExtensionProvider(elementName, namespace);
 
                 if(provider == null)
                 {
@@ -100,8 +99,8 @@ public class DefaultPacketExtensionProvider<C extends AbstractPacketExtension> e
                 }
                 else
                 {
-                    PacketExtension childExtension
-                        = provider.parseExtension(parser);
+                    ExtensionElement childExtension
+                        = provider.parse(parser);
 
                     if(namespace != null)
                     {

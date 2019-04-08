@@ -68,7 +68,7 @@ public class RtpDescriptionPacketExtension
     /**
      * The combined list of all child elements that this extension contains.
      */
-    private List<PacketExtension> children;
+    private List<ExtensionElement> children;
 
     /**
      * Creates a new <tt>RtpDescriptionPacketExtension</tt>.
@@ -176,10 +176,10 @@ public class RtpDescriptionPacketExtension
      * this packet.
      */
     @Override
-    public List<? extends PacketExtension> getChildExtensions()
+    public List<? extends ExtensionElement> getChildExtensions()
     {
         if(children == null)
-            children = new ArrayList<PacketExtension>();
+            children = new ArrayList<ExtensionElement>();
         else
             children.clear();
 
@@ -265,5 +265,10 @@ public class RtpDescriptionPacketExtension
     public List<RTPHdrExtPacketExtension> getExtmapList()
     {
         return extmapList;
+    }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
     }
 }

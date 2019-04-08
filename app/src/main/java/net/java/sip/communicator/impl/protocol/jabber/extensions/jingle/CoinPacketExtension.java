@@ -51,4 +51,9 @@ public class CoinPacketExtension
         super(NAMESPACE, ELEMENT_NAME);
         setAttribute(ISFOCUS_ATTR_NAME, isFocus);
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

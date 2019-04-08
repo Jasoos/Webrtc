@@ -146,7 +146,7 @@ public class RTPHdrExtPacketExtension
      */
     public String getAttributes()
     {
-        for(PacketExtension ext : getChildExtensions())
+        for(ExtensionElement ext : getChildExtensions())
         {
             if(ext instanceof ParameterPacketExtension)
             {
@@ -161,4 +161,8 @@ public class RTPHdrExtPacketExtension
         return null;
     }
 
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }

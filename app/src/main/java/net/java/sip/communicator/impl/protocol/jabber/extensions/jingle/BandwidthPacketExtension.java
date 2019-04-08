@@ -78,4 +78,9 @@ public class BandwidthPacketExtension
     {
         return super.getText();
     }
+
+    @Override
+    public CharSequence toXML(String enclosingNamespace) {
+        return null;
+    }
 }
