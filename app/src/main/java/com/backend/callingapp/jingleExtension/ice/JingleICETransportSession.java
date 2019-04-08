@@ -4,9 +4,7 @@ package com.backend.callingapp.jingleExtension.ice;
 import com.backend.callingapp.jingleExtension.JingleManagerExt;
 import com.backend.callingapp.jingleExtension.ice.elements.JingleICEContentTransport;
 
-
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.bosh.XMPPBOSHConnection;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smackx.jingle.JingleSession;
 import org.jivesoftware.smackx.jingle.JingleUtil;
@@ -16,7 +14,7 @@ import org.jivesoftware.smackx.jingle.element.JingleContentTransport;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportInitiationCallback;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportManager;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportSession;
-
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,6 +73,11 @@ public class JingleICETransportSession extends JingleTransportSession<JingleICEC
         }
         JingleManagerExt.getInstanceFor(transportManager.getConnection()).registerJingleSessionHandler(transportInfo.getFrom().asFullJidIfPossible(),
                 transportInfo.getSid(),jingleSession);
+
+        //mPeerConnection.getLocalIceCandidate();
+       /* new JingleIQProvider().parseIQ(new XmlPullParser().fr)
+        SdpToJingle.sdpFromJingle(JingleIQProvider);*/
+
 
         return new JingleUtil(transportManager.getConnection()).createTransportAccept(transportInfo.getFrom().asFullJidIfPossible(),
                 transportInfo.getInitiator(),transportInfo.getSid(), JingleContent.Creator.responder,"audio",null);

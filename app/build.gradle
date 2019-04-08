@@ -42,11 +42,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation "org.igniterealtime.smack:smack-android-extensions:4.3.0"
-    implementation "org.igniterealtime.smack:smack-tcp:4.3.0"
-    implementation "org.igniterealtime.smack:smack-bosh:4.3.0"
+    implementation 'org.igniterealtime.smack:smack-android-extensions:4.3.0'
+    implementation 'org.igniterealtime.smack:smack-tcp:4.3.0'
+    implementation 'org.igniterealtime.smack:smack-bosh:4.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.webrtc:google-webrtc:1.0.+'
+    implementation 'net.sourceforge.jsdp:jsdp:1.1'
+    implementation 'ch.imvs:sdes4j:1.1.4'
+    implementation 'org.hamcrest:hamcrest-core:2.1'
 }
