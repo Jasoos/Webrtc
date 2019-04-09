@@ -3,6 +3,9 @@ package com.tuenti.protocol.sdp;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jingle.*;
 import net.sourceforge.jsdp.*;
 import org.jivesoftware.smack.packet.IQ;
+import org.jivesoftware.smackx.jingle.element.Jingle;
+import org.jivesoftware.smackx.jingle.element.JingleAction;
+import org.jivesoftware.smackx.jingle.element.JingleContent;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -97,21 +100,24 @@ public class SdpToJingle {
 	 *
 	 * @param sessionDescription {@link SessionDescription} - The {@link SessionDescription} to convert.
 	 * @param mediaName String - The "name" to use in the "content" tag.
-	 * @return {@link JingleIQ} - A new {@link JingleIQ} containing all the transport candidates.
+	 * @return {@link Jingle} - A new {@link Jingle} containing all the transport candidates.
 	 */
-	private static JingleIQ createJingleTransportInfo(final SessionDescription sessionDescription,
-			final String mediaName) {
+	private static Jingle createJingleTransportInfo(final SessionDescription sessionDescription,
+													final String mediaName) {
 
-		JingleIQ result = new JingleIQ();
-		result.setType(IQ.Type.set);
 		Origin origin = sessionDescription.getOrigin();
-		result.setSID(Long.toString(origin.getSessionID()));
+		Jingle result = Jingle.getBuilder()
+				.setSessionId(Long.toString(origin.getSessionID()))
+				.setAction(JingleAction.transport_info)
+				.build();
+
+		result.setType(IQ.Type.set);
 
 		ContentPacketExtension content = new ContentPacketExtension();
 		content.setName(mediaName);
 
 		try {
-			result.setAction(JingleAction.parseString(JingleAction.TRANSPORT_INFO.toString()));
+
 			Attribute[] candidateAttributes = sessionDescription.getAttributes("candidate");
 			Attribute userFragment = sessionDescription.getAttribute("ice-ufrag");
 			Attribute password = sessionDescription.getAttribute("ice-pwd");
@@ -132,26 +138,26 @@ public class SdpToJingle {
 	/**
 	 * Creates an SDP object from a Jingle Stanza.
 	 *
-	 * @param jingle JingleIQ - The Jingle stanza to convert.
+	 * @param jingle Jingle - The Jingle stanza to convert.
 	 * @return SessionDescription - Converted SDP object.
 	 */
 	// Things that remain to be done:
 	//  * Generate the "crypto" line from the <encription><crypto> element.
 	//  * Generate the "ssrc" lines from the <streams> element.
-	public static SessionDescription sdpFromJingle(JingleIQ jingle) {
+	public static SessionDescription sdpFromJingle(Jingle jingle) {
 		try {
-			SessionDescription result = getNewSessionDescription(jingle.getSID());
-			List<ContentPacketExtension> contents = jingle.getContentList();
+			SessionDescription result = getNewSessionDescription(jingle.getSid());
+			List<JingleContent> contents = jingle.getContents();
 
 			// "a=group:BUNDLE audio video"
 			StringBuilder valueBuilder = new StringBuilder("BUNDLE");
-			for (ContentPacketExtension content : contents) {
+			for (JingleContent content : contents) {
 				valueBuilder.append(" ").append(content.getName());
 			}
 			Attribute attr = new Attribute("group", valueBuilder.toString());
 			result.addAttribute(attr);
 
-			for (ContentPacketExtension content : contents) {
+			for (JingleContent content : contents) {
 
 				// "m=audio 36798 RTP/AVPF 103 104 110 107 9 102 108 0 8 106 105 13 127 126\r\n"
 				String contentType = content.getName();
@@ -275,15 +281,15 @@ public class SdpToJingle {
 	 * Creates a Jingle stanza from SDP.
 	 *
 	 * @param sdp SessionDescription - The SDP object to convert to Jingle.
-	 * @return JingleIQ - Converted Jingle stanza.
+	 * @return Jingle - Converted Jingle stanza.
 	 */
 	// Things that remain to be done:
 	//  * Generate the <encription><crypto> element from the "crypto" line of SDP.
 	//  * Generate the <streams><stream> elements from the "ssrc" lines of SDP.
-	public static JingleIQ jingleFromSdp(final SessionDescription sdp) {
-		JingleIQ result = new JingleIQ();
+	public static Jingle jingleFromSdp(final SessionDescription sdp) {
+		Jingle result = new Jingle();
 		result.setType(IQ.Type.set);
-		
+
 		Origin origin = sdp.getOrigin();
 		result.setSID(Long.toString(origin.getSessionID()));
 
@@ -404,13 +410,13 @@ public class SdpToJingle {
 	 * @param candidateList List<String> - List of SDP ICE candidates.
 	 * @param sid String - The Jingle session ID.
 	 * @param mediaName String - The "name" to use in the "content" tag.
-	 * @return {@link JingleIQ} - A new {@link JingleIQ} containing all the transport candidates.
+	 * @return {@link Jingle} - A new {@link Jingle} containing all the transport candidates.
 	 */
-	public static JingleIQ transportInfoFromSdpStub(final List<String> candidateList, final String sid,
+	public static Jingle transportInfoFromSdpStub(final List<String> candidateList, final String sid,
 			final String mediaName) {
 
 		SessionDescription sessionDescription = null;
-		JingleIQ result = null;
+		Jingle result = null;
 		String candidatePrefix = "candidate:";
 
 		// First, create a session description object.
